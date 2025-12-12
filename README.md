@@ -41,9 +41,3 @@ npm install
 npx playwright install chromium
 
 
-│       └── helpers/UserManager.js # 🗺️ Maps Projects -> Credentials
-├── pages/                     # Interaction Logic (Click, Fill, Navigate)
-├── selectors/                 # Element Locators (CSS/XPath)
-├── utils/userData.json        # Test Data for forms
-├── playwright.config.js       # Configuration (Workers, Timeouts)
-└── .env                       # Secrets (Excluded from Git)
