@@ -54,7 +54,7 @@ test.describe('User Delete Tests', () => {
    * Test Case 3: Create and delete user - Test3
    */
   test('UD-003: Delete user - Test3', async ({ authenticatedPage }) => {
-    await authenticatedPage.waitForTimeout(30000);
+    await authenticatedPage.waitForTimeout(50000);
     const user = userData.users[2];
     await usersCreatePage.createUser(user);
 
@@ -85,6 +85,7 @@ test.describe('User Delete Tests', () => {
    * Test Case 5: Create and delete user - Test5
    */
   test('UD-005: Delete user - Test5', async ({ authenticatedPage }) => {
+    await authenticatedPage.waitForTimeout(30000);
     const user = userData.users[4];
     await usersCreatePage.createUser(user);
 
@@ -115,6 +116,7 @@ test.describe('User Delete Tests', () => {
    * Test Case 7: Create and delete user - Test7
    */
   test('UD-007: Delete user - Test7', async ({ authenticatedPage }) => {
+    await authenticatedPage.waitForTimeout(30000);
     const user = userData.users[6];
     await usersCreatePage.createUser(user);
 

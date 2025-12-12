@@ -15,6 +15,7 @@ test.describe('User Creation Tests', () => {
   });
 
   test('UC-001: Verify New User page navigation', async ({ authenticatedPage }) => {
+    await authenticatedPage.waitForTimeout(50000);
     await usersCreatePage.usersPage.clickNewUser();
     await usersCreatePage.verifyNewUserPageVisible();
   });
@@ -32,6 +33,7 @@ test.describe('User Creation Tests', () => {
   });
 
   test('UC-003: Verify user creation form validation errors', async ({ authenticatedPage }) => {
+    await authenticatedPage.waitForTimeout(50000);
     // Navigate to New User page and submit empty form to assert validations
     await usersCreatePage.navigateToCreatePage();
     await usersCreatePage.clickCreateUser();
@@ -39,7 +41,6 @@ test.describe('User Creation Tests', () => {
   });
 
   test('UC-004: Create new user - Test1 (Accounting)', async ({ authenticatedPage }) => {
-    await authenticatedPage.waitForTimeout(30000);
     const user = userData.users[0];
     await usersCreatePage.createUser(user);
     
@@ -54,7 +55,7 @@ test.describe('User Creation Tests', () => {
   });
 
   test('UC-005: Create new user - Test2 (Admin)', async ({ authenticatedPage }) => {
-    await authenticatedPage.waitForTimeout(30000);
+    await authenticatedPage.waitForTimeout(50000);
     const user = userData.users[1];
     await usersCreatePage.createUser(user);
     
@@ -83,6 +84,7 @@ test.describe('User Creation Tests', () => {
   });
 
   test('UC-007: Create new user - Test4 (Member)', async ({ authenticatedPage }) => {
+    await authenticatedPage.waitForTimeout(50000);
     const user = userData.users[3];
     await usersCreatePage.createUser(user);
     
@@ -97,7 +99,6 @@ test.describe('User Creation Tests', () => {
   });
 
   test('UC-008: Create new user - Test5 (Non-member)', async ({ authenticatedPage }) => {
-    await authenticatedPage.waitForTimeout(30000);
     const user = userData.users[4];
     await usersCreatePage.createUser(user);
     
@@ -112,6 +113,7 @@ test.describe('User Creation Tests', () => {
   });
 
   test('UC-009: Create new user - Test6 (Staff)', async ({ authenticatedPage }) => {
+    await authenticatedPage.waitForTimeout(50000);
     const user = userData.users[5];
     await usersCreatePage.createUser(user);
     
