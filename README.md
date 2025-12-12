@@ -39,3 +39,21 @@ To solve the issue of "Session Invalidation" (where one test logs out another), 
 ```bash
 npm install
 npx playwright install chromium
+
+📂 Project Structure
+Plaintext
+
+WEA-WIN/
+├── tests/
+│   ├── login/                 # Login verification tests
+│   ├── group1/                # User Creation & Management tests
+│   ├── group2/                # User View & Update tests
+│   ├── group3/                # User Deletion tests
+│   └── shared/
+│       ├── fixtures/baseTest.js   # ⚡ The magic: Auto-login fixture
+│       └── helpers/UserManager.js # 🗺️ Maps Projects -> Credentials
+├── pages/                     # Interaction Logic (Click, Fill, Navigate)
+├── selectors/                 # Element Locators (CSS/XPath)
+├── utils/userData.json        # Test Data for forms
+├── playwright.config.js       # Configuration (Workers, Timeouts)
+└── .env                       # Secrets (Excluded from Git)
