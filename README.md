@@ -36,7 +36,7 @@ To solve the issue of "Session Invalidation" (where one test logs out another), 
 * **4 Valid Admin Accounts** in the WEA-WIN test environment (or 1 account reused 4 times, though not recommended for parallel runs).
 
 ### 2. Install Dependencies
-
+```bash
 npm install
 npx playwright install chromium
 
