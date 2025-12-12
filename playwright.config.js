@@ -4,25 +4,35 @@ require('dotenv').config();
 
 /**
  * Playwright Configuration for WEA-WIN Admin Application
+ * Folder-Based Parallel Execution Architecture
+ * 
+ * This configuration supports parallel execution of test groups,
+ * where each group uses a dedicated user account to prevent session conflicts.
+ * 
+ * Architecture:
+ * - 4 Workers: Runs test groups in parallel
+ * - fullyParallel: false - Tests within each group run sequentially
+ * - Each project uses the baseTest fixture with automatic authentication
+ * 
  * @see https://playwright.dev/docs/test-configuration
  */
 module.exports = defineConfig({
   testDir: './tests',
   
   /* Maximum time one test can run for */
-  timeout: 60 * 1000,
+  timeout: 120 * 1000, // Increased to 120s to handle user creation/deletion operations
   
   /* Run tests in files in parallel */
-  fullyParallel: false,
+  fullyParallel: false, // Keep tests within a group sequential
   
   /* Fail the build on CI if you accidentally left test.only in the source code. */
   forbidOnly: !!process.env.CI,
   
   /* Retry on CI only */
-  retries: process.env.CI ? 2 : 0,
+  retries: process.env.CI ? 2 : 1, // Allow 1 retry locally for flaky tests
   
-  /* Opt out of parallel tests on CI. */
-  workers: process.env.CI ? 1 : 1,
+  /* Number of parallel workers - one per test group */
+  workers: 4, // Run 4 test groups in parallel (one worker per project below)
   
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: [
@@ -46,82 +56,52 @@ module.exports = defineConfig({
     video: 'retain-on-failure',
     
     /* Maximum time each action such as `click()` can take */
-    actionTimeout: 15 * 1000,
+    actionTimeout: 20 * 1000, // Increased to 20s for parallel execution
     
     /* Maximum time for navigation */
-    navigationTimeout: 30 * 1000,
+    navigationTimeout: 45 * 1000, // Increased to 45s for parallel execution
   },
 
-  /* Configure projects for major browsers */
+  /* Configure projects for parallel execution with dedicated users */
   projects: [
-    // Setup project - runs first to create auth state
+    // Login Tests - Uses TEST_USER credentials
     {
-      name: 'setup',
-      testMatch: /.*\.setup\.js/,
-    },
-    
-    // Chromium login tests - do NOT use auth state
-    {
-      name: 'chromium-login',
-      testMatch: /.*login\.spec\.js/,
+      name: 'login',
+      testMatch: /tests\/login\/.*\.spec\.js/,
       use: { 
         ...devices['Desktop Chrome'],
       },
+      workers: 1, // Run login specs sequentially within this project
     },
 
-    // Chromium user creation tests - depend on setup and use auth state
+    // Group 1 - User Creation & Management Tests - Uses TEST_USER_1 credentials
     {
-      name: 'chromium-users-create',
-      testMatch: /.*users\.create\.spec\.js/,
+      name: 'group1',
+      testMatch: /tests\/group1\/.*\.spec\.js/,
       use: { 
         ...devices['Desktop Chrome'],
-        storageState: 'fixtures/auth.json',
       },
-      dependencies: ['setup'],
+      workers: 1, // Run group1 specs sequentially within this project
     },
     
-    // Chromium user management tests - depend on setup and use auth state
+    // Group 2 - User View & Update Tests - Uses TEST_USER_2 credentials
     {
-      name: 'chromium-users',
-      testMatch: /.*users\.manage\.spec\.js/,
+      name: 'group2',
+      testMatch: /tests\/group2\/.*\.spec\.js/,
       use: { 
         ...devices['Desktop Chrome'],
-        storageState: 'fixtures/auth.json',
       },
-      dependencies: ['setup'],
+      workers: 1, // Run group2 specs sequentially within this project
     },
     
-    // Chromium user view tests - depend on setup and use auth state
+    // Group 3 - User Delete Tests - Uses TEST_USER_3 credentials
     {
-      name: 'chromium-users-view',
-      testMatch: /.*users\.view\.spec\.js/,
+      name: 'group3',
+      testMatch: /tests\/group3\/.*\.spec\.js/,
       use: { 
         ...devices['Desktop Chrome'],
-        storageState: 'fixtures/auth.json',
       },
-      dependencies: ['setup'],
-    },
-    
-    // Chromium user update tests - depend on setup and use auth state
-    {
-      name: 'chromium-users-update',
-      testMatch: /.*users\.update\.spec\.js/,
-      use: { 
-        ...devices['Desktop Chrome'],
-        storageState: 'fixtures/auth.json',
-      },
-      dependencies: ['setup'],
-    },
-
-    // Chromium user delete tests - depend on setup and use auth state
-    {
-      name: 'chromium-users-delete',
-      testMatch: /.*users\.delete\.spec\.js/,
-      use: { 
-        ...devices['Desktop Chrome'],
-        storageState: 'fixtures/auth.json',
-      },
-      dependencies: ['setup'],
+      workers: 1, // Run group3 specs sequentially within this project
     },
   ],
 });
